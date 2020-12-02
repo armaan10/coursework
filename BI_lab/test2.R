@@ -43,5 +43,28 @@ hist(onehotspecs,breaks=2)
 df2<-df2[c(0:4)]
 install.packages("e1071")
 installed.packages("e1071")
+#predictive analysis
 library("e1071")
-naiveBayes()
+iris
+train=df2[c(1:100),]
+train=df2[c(1:100),]
+target=onehotspecs[1:100]
+#naive bayes
+model=naiveBayes(train,target)
+
+predict(model,df2[c(100:150),])
+# help("naiveBayes")
+model=kmeans(train,2)
+plot(train,col=model$cluster)
+#knn
+install.packages("class")
+library("class")
+x1 <- c(7,7,3,1)
+x2 <- c(7,4,4,4)
+y <- c(1,1,2,2) #label
+df<- cbind(x1,x2) #train dataset
+testDF <- c(3,7) #test dataset
+pred <- knn(train = df, test = testDF, cl = y, k=3)
+pred
+read.csv("~/Downloads/")
+
