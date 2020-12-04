@@ -20,6 +20,8 @@ public class GenreCount {
 	Path input=new Path(files[0]);
 	Path output=new Path(files[1]);
 	Job j=new Job(c,"genrecount");
+	//Set Map and reducer class along with output datatypes
+
 	j.setJarByClass(GenreCount.class);
 	j.setMapperClass(MapForGenreCount.class);
 	j.setReducerClass(ReduceForGenreCount.class);
@@ -29,19 +31,23 @@ public class GenreCount {
 	FileOutputFormat.setOutputPath(j, output);
 	System.exit(j.waitForCompletion(true)?0:1);
 	}
-	
+	//map function key value pairs datatype<keyin,valuein,keyout,valueout>
+
 	public static class MapForGenreCount extends Mapper<LongWritable, Text,
 	Text, Text>{
 		
 		public void map(LongWritable key, Text value, Context con) throws
 		IOException, InterruptedException
-		{
+		{//convert doc/tuple to string
 		String line = value.toString();
+		//split columns
 		String[] words=line.split(",");
+		//split last columns using "|" to iterate over all genres
 		String[] genres=words[2].split("\\|");
+		//set o/p key to movie name
 		Text outputKey = new Text(words[1].toUpperCase().trim());
 		for (String genre:genres)
-		{
+		{	//set o/p value to genre 
 			Text outputValue=new Text(genre.toUpperCase().trim());
 			con.write(outputKey, outputValue);
 		}
@@ -50,7 +56,8 @@ public class GenreCount {
 		
 		//con.write(outputKey, outputValue);
 		}
-		}
+		}//reducer function key value pairs datatype<keyin,valuein,keyout,valueout>
+
 		public static class ReduceForGenreCount extends Reducer<Text,
 		Text, Text, IntWritable>
 		{
@@ -58,10 +65,12 @@ public class GenreCount {
 		con) throws IOException, InterruptedException
 		{
 		int count = 0;
+		//count number of genres for each key(moviename)
 		for(Text value : values)
 		{
 		count ++;
 		}
+		//write for movies with more than 2 genres
 		if(count>2)
 		{con.write(word, new IntWritable(count));}
 		}
