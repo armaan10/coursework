@@ -1,0 +1,18 @@
+1.Display users from NY
+//load dataset
+A = load '/user/hduser/lab6/users.csv' using PigStorage(',') ;
+//filter rows where city column is NY
+ny_usrs = FILTER A BY EqualsIgnoreCase($2,'NY');
+//Display users from NY
+dump ny_usrs;
+
+2.Favorite match
+//load tweets dataset
+B = load '/user/hduser/lab6/tweets.csv' using PigStorage(',') ;
+//find tweets with favorite keyword
+X = FILTER B BY ($1 matches '(?i).*favorite.*'); 
+//order by tweet id
+Y = ORDER X BY $0;
+//display 
+dumpy Y;
+
